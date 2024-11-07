@@ -1,0 +1,29 @@
+Vagrant.configure("2") do |config|
+  # Configuración de la máquina web1
+  config.vm.define "web1" do |web1|
+    web1.vm.box = "ubuntu/bionic64"
+    web1.vm.network "private_network", ip: "192.168.33.10"
+    web1.vm.hostname = "web1"
+    
+    web1.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      apt-get install -y apache2
+      echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Web1 - ¡Hola Mundo!</title><style>body {font-family: Arial, sans-serif; background-color: #f0f8ff; color: #333; text-align: center; margin-top: 50px;} h1 {color: #ff6347;} p {font-size: 1.2em;}</style></head><body><h1>¡Hola Mundo desde Web1!</h1><p>Esta es la página principal del servidor Web1.</p></body></html>' > /var/www/html/index.html
+      systemctl restart apache2
+    SHELL
+  end
+  
+  # Configuración de la máquina web2
+  config.vm.define "web2" do |web2|
+    web2.vm.box = "ubuntu/bionic64"
+    web2.vm.network "private_network", ip: "192.168.33.11"
+    web2.vm.hostname = "web2"
+    
+    web2.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      apt-get install -y apache2
+      echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Web2 - ¡Hola Mundo!</title><style>body {font-family: Arial, sans-serif; background-color: #e6e6fa; color: #333; text-align: center; margin-top: 50px;} h1 {color: #4682b4;} p {font-size: 1.2em;}</style></head><body><h1>¡Hola Mundo desde Web2!</h1><p>Esta es la página principal del servidor Web2.</p></body></html>' > /var/www/html/index.html
+      systemctl restart apache2
+    SHELL
+  end
+end
