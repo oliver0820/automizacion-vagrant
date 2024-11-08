@@ -1,0 +1,20 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "private_network", ip: "192.168.33.19"
+  config.vm.network "forwarded_port", guest: 22, host: 2223
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "512"
+    vb.cpus = 1
+  end
+
+
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+    sudo apt-get update
+    sudo apt-get install -y apache2
+
+    
+    sudo cp /vagrant/src/index.html /var/www/html/index.html
+    sudo systemctl restart apache2
+  SHELL
+end
